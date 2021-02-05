@@ -4,3 +4,4 @@ python-dotenv==0.15.0
 pandas==1.2.1
 SQLAlchemy==1.3.23
 jinjasql==0.1.8
+gunicorn==20.0.4

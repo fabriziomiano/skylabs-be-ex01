@@ -1,0 +1,9 @@
+# python compiled
+*.pyc
+__pycache__
+
+# pycharm stuff
+.idea
+
+# sql scripts
+*.sql
