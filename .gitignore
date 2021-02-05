@@ -1,0 +1,12 @@
+# python compiled
+*.pyc
+__pycache__
+
+# pycharm stuff
+.idea
+
+# log files
+*.log
+
+# sqlite db
+*.sqlite
