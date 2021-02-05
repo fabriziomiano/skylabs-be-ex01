@@ -73,6 +73,7 @@
 ## Esercizi
 
 1. Scrivi una query che estragga il **numero di persone** con **meno di 30 anni** che guadagnano **più di 50.000 dollari l'anno**.
+   ### Soluzione
    ```sqlite
     SELECT COUNT(*) [Numero di persone]
     FROM records
@@ -85,7 +86,7 @@
 
 
 2. Scrivi una query che riporti il **guadagno di capitale medio** per ogni categoria lavorativa
-
+    ### Soluzione
     ```sqlite
     SELECT w.name            [Categoria lavorativa]
          , AVG(capital_gain) [Guadagno capitale medio]
@@ -107,40 +108,83 @@
     |Without-pay|325.23809523809524|
 
 
-3. (a) Lista dei record denormalizzati, cioè ogni entità deve contenere anche tutte le informazioni derivanti dalle tabelle secondarie del DB. L'API deve essere realizzata in GET e avere una paginazione parametrica (cioè tramite l'url è possibile definire offset e count)
+3.
 
+- 3a. Lista dei record denormalizzati, cioè ogni entità deve contenere anche 
+   tutte le informazioni derivanti dalle tabelle secondarie del DB. 
+   L'API deve essere realizzata in **GET** e avere una **paginazione parametrica**
+   (cioè tramite l'url è possibile definire offset e count)
 
-3. (b) Statistiche aggregate filtrate in base ad alcuni parametri significativi
+    ### Soluzione
+   - `GET /api/records/page/<page>?per_page=<per_page>`
+     
+        - lista di N records per 
+          pagina `<per_page>` all'i-esima pagina `page`, con `page > 1`. 
+          Se `page` non è specificato, default su 25 risultati per pagina.
+
+   - `GET /api/records`
+        - lista di tutti i records (bonus, non richiesto)
+    
+
+- 3b. Statistiche aggregate filtrate in base ad alcuni parametri significativi
     
     L'API, realizzabile in **GET** o in **POST**, deve soddisfare questa
     documentazione fornita dal cliente:
-   
-    **INPUT**:
-   ```
-    - aggregationType: "age", "education_level_id", "occupation_idb"
-    - aggregationValue: int
-   ```
+    
+    - **INPUT**:
+       ```
+        - aggregationType: "age", "education_level_id", "occupation_idb"
+        - aggregationValue: int
+       ```
+    
+    - **OUTPUT** :
+        ```
+        {
+            "aggregationType": "string",
+            "aggregationFilter": int,
+            "capital_gain_sum": float,
+            "capital_gain_avg": float,
+            "capital_loss_sum": float,
+            "capital_loss_avg": float,
+            "over_50k_count": int,
+            "under_50k_count": int
+        }
+        ```
 
-    **OUTPUT** :
-    ```
-    {
-        "aggregationType": "string",
-        "aggregationFilter": int,
-        "capital_gain_sum": float,
-        "capital_gain_avg": float,
-        "capital_loss_sum": float,
-        "capital_loss_avg": float,
-        "over_50k_count": int,
-        "under_50k_count": int
-    }
-   ```
-
-    **ESEMPIO**:
+    - **ESEMPIO**:
     Passando i parametri "aggregationType" = "age" e "aggregationValue" = 30 si ottengono
     le statistiche per tutti coloro che hanno 30 anni.
+    
+    ### Soluzione
+    - `GET /api/stats?aggregationType=<aggregationType>&aggregationValue=<aggregationValue>`
+    - `POST /api/stats {"aggregationType": "age", "aggregationValue": 30}`
 
 
 4. Esponi inoltre, tramite il medesimo servizio web, un endpoint che faccia il 
    download in formato **CSV** di tutti i dati **denormalizzati** 
    (cioè ogni riga deve contenere sia il record che tutti i dati relazionati dalle altre tabelle)
    
+    ### Soluzione
+    - `GET /api/csv`
+
+
+### [Bonus Story]
+È stato fatto il deployment delle APIs su Heroku tramite Docker container ed è possibile testarle.
+
+- Esercizio 3a `GET /api/records/page/3?per_page=10` (es. pag.3 con 10 risultati per pagina) 
+  [qui](https://skylabs-ex01.herokuapp.com/api/records/page/3?per_page=10)
+- Esercizio 3b `GET  /api/stats?aggregationType=age&aggregationValue=30`
+  [qui](https://skylabs-ex01.herokuapp.com/api/stats?aggregationType=age&aggregationValue=30)
+- Esercizio 4 `GET /api/csv` [qui](https://skylabs-ex01.herokuapp.com/api/csv)
+- extra `GET /api/records` [qui](https://skylabs-ex01.herokuapp.com/api/records)
+
+**Nota**: Per l'esercizio 3b, è possibile effettuare la `POST` con JSON body
+
+```shell
+curl --request POST https://skylabs-ex01.herokuapp.com/api/stats \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+        "aggregationType": "age",
+        "aggregationValue": 52
+    }'
+```
