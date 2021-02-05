@@ -122,9 +122,9 @@
    ```
 
     **OUTPUT** :
-    ```json
+    ```
     {
-      "aggregationType": "string",
+        "aggregationType": "string",
         "aggregationFilter": int,
         "capital_gain_sum": float,
         "capital_gain_avg": float,
