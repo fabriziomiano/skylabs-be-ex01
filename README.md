@@ -72,35 +72,75 @@
 
 ## Esercizi
 
-1. Scrivi una query che estragga il **numero di persone** con
-   **meno di 30 anni** che guadagnano **più di 50.000 dollari l'anno**.
+1. Scrivi una query che estragga il **numero di persone** con **meno di 30 anni** che guadagnano **più di 50.000 dollari l'anno**.
    ```sqlite
     SELECT COUNT(*) [Numero di persone]
     FROM records
     WHERE over_50k = 1
       AND age < 30;
    ```
-   |Numero di persone|
-   |-----------------|
-   |746|
+    |Numero di persone|
+    |-----------------|
+    |746|
 
-2. Scrivi una query che riporti il **guadagno di capitale medio** per ogni
-   categoria lavorativa
-   ```sqlite
+
+2. Scrivi una query che riporti il **guadagno di capitale medio** per ogni categoria lavorativa
+
+    ```sqlite
     SELECT w.name            [Categoria lavorativa]
          , AVG(capital_gain) [Guadagno capitale medio]
     FROM records r
              JOIN workclasses w on r.workclass_id = w.id
     GROUP BY w.name
     ```
-   |Categoria lavorativa|Guadagno capitale medio|
-   |------------------------|---------------------|
-   |?|502.94605216148625|
-   |Federal-gov|923.2877094972067|
-   |Local-gov|798.2286352040817|
-   |Never-worked|0|
-   |Private|896.1353742700408|
-   |Self-emp-inc|5132.794100294986|
-   |Self-emp-not-inc|1781.7446918694977|
-   |State-gov|756.3361938414942|
-   |Without-pay|325.23809523809524|
+    
+    |Categoria lavorativa|Guadagno capitale medio|
+    |------------------------|---------------------|
+    |?|502.94605216148625|
+    |Federal-gov|923.2877094972067|
+    |Local-gov|798.2286352040817|
+    |Never-worked|0|
+    |Private|896.1353742700408|
+    |Self-emp-inc|5132.794100294986|
+    |Self-emp-not-inc|1781.7446918694977|
+    |State-gov|756.3361938414942|
+    |Without-pay|325.23809523809524|
+
+
+3. (a) Lista dei record denormalizzati, cioè ogni entità deve contenere anche tutte le informazioni derivanti dalle tabelle secondarie del DB. L'API deve essere realizzata in GET e avere una paginazione parametrica (cioè tramite l'url è possibile definire offset e count)
+
+
+3. (b) Statistiche aggregate filtrate in base ad alcuni parametri significativi
+    
+    L'API, realizzabile in **GET** o in **POST**, deve soddisfare questa
+    documentazione fornita dal cliente:
+   
+    **INPUT**:
+   ```
+    - aggregationType: "age", "education_level_id", "occupation_idb"
+    - aggregationValue: int
+   ```
+
+    **OUTPUT** :
+    ```json
+    {
+      "aggregationType": "string",
+        "aggregationFilter": int,
+        "capital_gain_sum": float,
+        "capital_gain_avg": float,
+        "capital_loss_sum": float,
+        "capital_loss_avg": float,
+        "over_50k_count": int,
+        "under_50k_count": int
+    }
+   ```
+
+    **ESEMPIO**:
+    Passando i parametri "aggregationType" = "age" e "aggregationValue" = 30 si ottengono
+    le statistiche per tutti coloro che hanno 30 anni.
+
+
+4. Esponi inoltre, tramite il medesimo servizio web, un endpoint che faccia il 
+   download in formato **CSV** di tutti i dati **denormalizzati** 
+   (cioè ogni riga deve contenere sia il record che tutti i dati relazionati dalle altre tabelle)
+   

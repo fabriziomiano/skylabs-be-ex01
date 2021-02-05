@@ -1,8 +1,11 @@
 """
 Flask application factory
 """
+from jinjasql import JinjaSql
 from flask import Flask
 from .models import db
+
+jsql = JinjaSql()
 
 
 def create_app():
