@@ -7,7 +7,7 @@ resource "heroku_app" "app" {
 resource "heroku_build" "app" {
   app = heroku_app.app.name
   source = {
-    url =  "https://github.com/fabriziomiano/skylabs-be-ex01/archive/feature/automation.tar.gz"
+    url =  "https://github.com/fabriziomiano/skylabs-be-ex01/archive/master.tar.gz"
     version = "1.0"
   }
 }
@@ -17,6 +17,6 @@ resource "heroku_formation" "app" {
   app        = heroku_app.app.name
   type       = "web"
   quantity   = 1
-  size       = "hobby"
+  size       = "free"
   depends_on = [heroku_build.app]
 }
